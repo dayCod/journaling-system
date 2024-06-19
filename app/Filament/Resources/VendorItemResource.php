@@ -54,8 +54,8 @@ class VendorItemResource extends Resource
                             ->maxLength(50)
                             ->placeholder('Vendor Item Code')
                             ->unique(ignoreRecord: true),
-                        \Filament\Forms\Components\Textarea::make('address')
-                            ->placeholder('Vendor Address')
+                        \Filament\Forms\Components\Textarea::make('note')
+                            ->placeholder('Vendor Item Note')
                             ->columnSpanFull()
                             ->rows(4),
                     ])

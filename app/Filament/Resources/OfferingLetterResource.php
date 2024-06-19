@@ -119,6 +119,10 @@ class OfferingLetterResource extends Resource
                     ->label('Profit Margin')
                     ->money('IDR')
                     ->toggleable(isToggledHiddenByDefault: true),
+                \Filament\Tables\Columns\TextColumn::make('purchase_capital')
+                    ->label('Purchase Capital')
+                    ->money('IDR')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 \Filament\Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

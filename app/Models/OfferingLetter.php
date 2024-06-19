@@ -20,7 +20,8 @@ class OfferingLetter extends Model
         'profit_margin',
         'total_price',
         'total_vat',
-        'grand_total'
+        'grand_total',
+        'purchase_capital'
     ];
 
     public function offeringLetterItems(): HasMany
@@ -35,7 +36,7 @@ class OfferingLetter extends Model
 
     public function getCapitalReturnPercentageAttribute(): string
     {
-        $vendorPrice = $this->offeringLetterItems->sum('vendor_item_total_price');
+        $vendorPrice = $this->getPurchaseCapitalAttribute();
         $retailPrice = $this->getTotalPriceAttribute();
 
         return floor((($retailPrice - $vendorPrice) / $vendorPrice) * 100).'%';
@@ -43,7 +44,7 @@ class OfferingLetter extends Model
 
     public function getProfitMarginAttribute(): int|float
     {
-        $vendorPrice = $this->offeringLetterItems->sum('vendor_item_total_price');
+        $vendorPrice = $this->getPurchaseCapitalAttribute();
         $retailPrice = $this->getTotalPriceAttribute();
 
         return floor($retailPrice - $vendorPrice);
@@ -62,5 +63,10 @@ class OfferingLetter extends Model
     public function getGrandTotalAttribute(): float|int
     {
         return $this->getTotalPriceAttribute() + $this->getTotalVatAttribute();
+    }
+
+    public function getPurchaseCapitalAttribute(): float|int
+    {
+        return $this->offeringLetterItems->sum('vendor_item_total_price');
     }
 }
