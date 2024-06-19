@@ -137,6 +137,12 @@ class OfferingLetterResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\Action::make('pdf')
+                    ->label('PDF')
+                    ->color('success')
+                    ->icon('heroicon-o-arrow-down-on-square-stack')
+                    ->url(fn (OfferingLetter $offeringLetter) => route('pdf.offeringLetter', $offeringLetter))
+                    ->openUrlInNewTab(),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
