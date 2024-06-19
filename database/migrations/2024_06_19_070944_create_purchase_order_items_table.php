@@ -25,7 +25,7 @@ return new class extends Migration
                 ->cascadeOnDelete();
 
             $table->unsignedInteger('quantity')->default(1);
-            $table->char('currency', 10);
+            $table->char('currency', 10)->default('IDR');
             $table->double('unit_price');
             $table->double('sub_total');
 

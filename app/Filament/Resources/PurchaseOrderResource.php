@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PurchaseOrderResource\Pages;
 use App\Filament\Resources\PurchaseOrderResource\RelationManagers;
+use App\Filament\Resources\PurchaseOrderResource\RelationManagers\PurchaseOrderItemsRelationManager;
 use App\Models\OfferingLetter;
 use App\Models\PurchaseOrder;
 use Filament\Forms;
@@ -104,6 +105,30 @@ class PurchaseOrderResource extends Resource
                 \Filament\Tables\Columns\TextColumn::make('date')
                     ->label('Purchase Order Date')
                     ->date(),
+                    \Filament\Tables\Columns\TextColumn::make('total_price')
+                    ->label('Total Price')
+                    ->money('IDR')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                \Filament\Tables\Columns\TextColumn::make('total_vat')
+                    ->label('Total VAT')
+                    ->money('IDR')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                \Filament\Tables\Columns\TextColumn::make('grand_total')
+                    ->label('Grand Total')
+                    ->money('IDR')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                \Filament\Tables\Columns\TextColumn::make('capital_return_percentage')
+                    ->label('Return Percentage From Capital')
+                    ->badge()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                \Filament\Tables\Columns\TextColumn::make('profit_margin')
+                    ->label('Profit Margin')
+                    ->money('IDR')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                \Filament\Tables\Columns\TextColumn::make('purchase_capital')
+                    ->label('Purchase Capital')
+                    ->money('IDR')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 \Filament\Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -157,7 +182,7 @@ class PurchaseOrderResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            PurchaseOrderItemsRelationManager::class,
         ];
     }
 
