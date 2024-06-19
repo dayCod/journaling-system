@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class OfferingLetter extends Model
@@ -17,5 +18,10 @@ class OfferingLetter extends Model
     public function offeringLetterItems(): HasMany
     {
         return $this->hasMany(OfferingLetterItem::class, 'offering_letter_id', 'id');
+    }
+
+    public function office(): BelongsTo
+    {
+        return $this->belongsTo(Office::class, 'office_id', 'id');
     }
 }
