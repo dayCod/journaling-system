@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\OfferingLetterResource\Pages;
 use App\Filament\Resources\OfferingLetterResource\RelationManagers;
+use App\Filament\Resources\OfferingLetterResource\RelationManagers\OfferingLetterItemsRelationManager;
 use App\Models\OfferingLetter;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -89,6 +90,14 @@ class OfferingLetterResource extends Resource
                 \Filament\Tables\Columns\TextColumn::make('attendance')
                     ->label('Customer PIC / Purchasing')
                     ->searchable(),
+                \Filament\Tables\Columns\TextColumn::make('capital_return_percentage')
+                    ->label('Return Percentage From Capital')
+                    ->badge()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                \Filament\Tables\Columns\TextColumn::make('profit_margin')
+                    ->label('Profit Margin')
+                    ->money('IDR')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 \Filament\Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -116,7 +125,7 @@ class OfferingLetterResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            OfferingLetterItemsRelationManager::class,
         ];
     }
 
