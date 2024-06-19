@@ -61,8 +61,14 @@ class PurchaseOrderResource extends Resource
                             ->label('Purchase order expiry date')
                             ->placeholder('Purchase Order Expiry Date')
                             ->native(false),
+                        \Filament\Forms\Components\SpatieMediaLibraryFileUpload::make('po_attachments')
+                            ->multiple()
+                            ->reorderable()
+                            ->openable()
+                            ->columnSpanFull()
+                            ->label('Purchase order attachments'),
                     ])
-                    ->columns(3),
+                    ->columns(2),
                 \Filament\Forms\Components\Section::make('Purchase Order Detail Information')
                     ->schema([
                         \Filament\Forms\Components\Select::make('offering_letter_id')
