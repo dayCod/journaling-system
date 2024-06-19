@@ -51,7 +51,8 @@ class OfferingLetterResource extends Resource
                         \Filament\Forms\Components\TextInput::make('code')
                             ->required()
                             ->maxLength(100)
-                            ->placeholder('Offering Letter Code'),
+                            ->placeholder('Offering Letter Number')
+                            ->label('Offering letter number'),
                         \Filament\Forms\Components\TextInput::make('sales_manager')
                             ->required()
                             ->maxLength(100)
@@ -91,7 +92,7 @@ class OfferingLetterResource extends Resource
         return $table
             ->columns([
                 \Filament\Tables\Columns\TextColumn::make('code')
-                    ->label('Offering Letter Code')
+                    ->label('Offering Letter Number')
                     ->searchable(),
                 \Filament\Tables\Columns\TextColumn::make('office.name')
                     ->label('Customer Office / Plant')
