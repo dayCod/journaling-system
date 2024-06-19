@@ -19,6 +19,11 @@ return new class extends Migration
             $table->text('note')->nullable();
             $table->string('code')->nullable();
 
+            $table->foreignId('vendor_id')
+                ->references('id')
+                ->on('vendors')
+                ->cascadeOnDelete();
+
             $table->timestamps();
         });
     }

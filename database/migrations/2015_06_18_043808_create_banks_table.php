@@ -11,17 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('vendors', function (Blueprint $table) {
+        Schema::create('banks', function (Blueprint $table) {
             $table->id();
 
             $table->string('name');
-            $table->text('address')->nullable();
-            $table->string('account_number')->nullable();
-
-            $table->foreignId('bank_id')
-                ->references('id')
-                ->on('banks')
-                ->cascadeOnDelete();
+            $table->string('code');
 
             $table->timestamps();
         });
@@ -32,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('vendors');
+        Schema::dropIfExists('banks');
     }
 };

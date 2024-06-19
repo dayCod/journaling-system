@@ -31,7 +31,26 @@ class VendorResource extends Resource
     {
         return $form
             ->schema([
-                //
+                \Filament\Forms\Components\Section::make()
+                    ->schema([
+                        \Filament\Forms\Components\TextInput::make('name')
+                            ->required()
+                            ->maxLength(255)
+                            ->placeholder('Vendor Name')
+                            ->columnSpanFull(),
+                        \Filament\Forms\Components\TextInput::make('account_number')
+                            ->placeholder('Vendor Account Number'),
+                        \Filament\Forms\Components\Select::make('bank_id')
+                            ->placeholder('Vendor Bank')
+                            ->relationship(name: 'bank', titleAttribute: 'name')
+                            ->searchable()
+                            ->preload(),
+                        \Filament\Forms\Components\Textarea::make('address')
+                            ->placeholder('Vendor Address')
+                            ->columnSpanFull()
+                            ->rows(4),
+                    ])
+                    ->columns(2)
             ]);
     }
 
@@ -39,7 +58,28 @@ class VendorResource extends Resource
     {
         return $table
             ->columns([
-                //
+                \Filament\Tables\Columns\TextColumn::make('name')
+                    ->label('Vendor Name')
+                    ->searchable(),
+                \Filament\Tables\Columns\TextColumn::make('address')
+                    ->label('Vendor Address')
+                    ->limit(30)
+                    ->formatStateUsing(fn ($state) => $state ?? '')
+                    ->tooltip(fn (Vendor $record) => $record->address),
+                \Filament\Tables\Columns\TextColumn::make('account_number')
+                    ->label('Vendor Account Number')
+                    ->searchable(),
+                \Filament\Tables\Columns\TextColumn::make('bank.name')
+                    ->label('Vendor Bank Name')
+                    ->searchable(),
+                \Filament\Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                \Filament\Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
@@ -47,6 +87,7 @@ class VendorResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -34,8 +34,6 @@ class OfficeResource extends Resource
                 \Filament\Forms\Components\Section::make()
                     ->schema([
                         \Filament\Forms\Components\TextInput::make('name')
-                            ->required()
-                            ->maxLength(255)
                             ->placeholder('Office Name'),
                         \Filament\Forms\Components\TextInput::make('plant')
                             ->placeholder('Office Plant'),
@@ -78,6 +76,7 @@ class OfficeResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
