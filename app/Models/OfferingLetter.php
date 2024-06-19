@@ -15,7 +15,13 @@ class OfferingLetter extends Model
 
     protected $guarded = ['id'];
 
-    protected $appends = ['capital_return_percentage', 'profit_margin'];
+    protected $appends = [
+        'capital_return_percentage',
+        'profit_margin',
+        'total_price',
+        'total_vat',
+        'grand_total'
+    ];
 
     public function offeringLetterItems(): HasMany
     {
@@ -30,7 +36,7 @@ class OfferingLetter extends Model
     public function getCapitalReturnPercentageAttribute(): string
     {
         $vendorPrice = $this->offeringLetterItems->sum('vendor_item_total_price');
-        $retailPrice = $this->offeringLetterItems->sum('total_price_per_item');
+        $retailPrice = $this->getTotalPriceAttribute();
 
         return floor((($retailPrice - $vendorPrice) / $vendorPrice) * 100).'%';
     }
@@ -38,8 +44,23 @@ class OfferingLetter extends Model
     public function getProfitMarginAttribute(): int|float
     {
         $vendorPrice = $this->offeringLetterItems->sum('vendor_item_total_price');
-        $retailPrice = $this->offeringLetterItems->sum('total_price_per_item');
+        $retailPrice = $this->getTotalPriceAttribute();
 
         return floor($retailPrice - $vendorPrice);
+    }
+
+    public function getTotalPriceAttribute(): float|int
+    {
+        return $this->offeringLetterItems->sum('total_price_per_item');
+    }
+
+    public function getTotalVatAttribute(): float|int
+    {
+        return $this->getTotalPriceAttribute() * 0.11;
+    }
+
+    public function getGrandTotalAttribute(): float|int
+    {
+        return $this->getTotalPriceAttribute() + $this->getTotalVatAttribute();
     }
 }

@@ -61,6 +61,15 @@ class OfferingLetterResource extends Resource
                             ->maxLength(25)
                             ->placeholder('Sales Representative Phone Number')
                             ->prefix('+62'),
+                        \Filament\Forms\Components\TextInput::make('total_price')
+                            ->hidden(request()->route()->getName() != 'filament.admin.resources.offering-letters.view')
+                            ->formatStateUsing(fn ($state) => number_format($state)),
+                        \Filament\Forms\Components\TextInput::make('total_vat')
+                            ->hidden(request()->route()->getName() != 'filament.admin.resources.offering-letters.view')
+                            ->formatStateUsing(fn ($state) => number_format($state)),
+                        \Filament\Forms\Components\TextInput::make('grand_total')
+                            ->hidden(request()->route()->getName() != 'filament.admin.resources.offering-letters.view')
+                            ->formatStateUsing(fn ($state) => number_format($state)),
                         \Filament\Forms\Components\RichEditor::make('note')
                             ->required()
                             ->placeholder('Offering Letter Note')
@@ -90,6 +99,18 @@ class OfferingLetterResource extends Resource
                 \Filament\Tables\Columns\TextColumn::make('attendance')
                     ->label('Customer PIC / Purchasing')
                     ->searchable(),
+                \Filament\Tables\Columns\TextColumn::make('total_price')
+                    ->label('Total Price')
+                    ->money('IDR')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                \Filament\Tables\Columns\TextColumn::make('total_vat')
+                    ->label('Total VAT')
+                    ->money('IDR')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                \Filament\Tables\Columns\TextColumn::make('grand_total')
+                    ->label('Grand Total')
+                    ->money('IDR')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 \Filament\Tables\Columns\TextColumn::make('capital_return_percentage')
                     ->label('Return Percentage From Capital')
                     ->badge()
