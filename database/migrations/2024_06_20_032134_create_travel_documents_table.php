@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('travel_documents', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('purhase_order_id')
+            $table->foreignId('purchase_order_id')
                 ->references('id')
                 ->on('purchase_orders')
                 ->cascadeOnDelete();
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('bod_name');
             $table->string('position');
 
-            $table->text('note');
+            $table->text('note')->nullable();
 
             $table->timestamps();
         });
