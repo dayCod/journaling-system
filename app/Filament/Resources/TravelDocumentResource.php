@@ -104,7 +104,10 @@ class TravelDocumentResource extends Resource
                     ->label('View PO Detail')
                     ->color('success')
                     ->icon('heroicon-o-eye')
-                    ->url(fn (TravelDocument $travelDoc) => route('filament.admin.resources.purchase-orders.view', $travelDoc->purchaseOrder))
+                    ->url(
+                        fn (TravelDocument $travelDocument)
+                            => route('filament.admin.resources.purchase-orders.view', $travelDocument->purchaseOrder)
+                    )
                     ->openUrlInNewTab(),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
