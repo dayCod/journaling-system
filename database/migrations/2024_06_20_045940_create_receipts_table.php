@@ -21,8 +21,13 @@ return new class extends Migration
 
             $table->string('code')->unique();
             $table->string('to_company_target');
+            $table->string('company_target_address');
+
             $table->string('bod_name');
             $table->string('position');
+
+            $table->string('bank_name');
+            $table->string('bank_account_number');
 
             $table->timestamps();
         });
