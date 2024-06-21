@@ -2,18 +2,22 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Forms;
+use Filament\Tables;
+use Filament\Forms\Form;
+use Filament\Tables\Table;
+use App\Models\PurchaseOrder;
+use App\Models\OfferingLetter;
+use App\Models\TravelDocument;
+use Filament\Resources\Resource;
+use Illuminate\Database\Eloquent\Model;
+use Filament\Notifications\Notification;
+use Filament\Forms\Components\DatePicker;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\PurchaseOrderResource\Pages;
 use App\Filament\Resources\PurchaseOrderResource\RelationManagers;
 use App\Filament\Resources\PurchaseOrderResource\RelationManagers\PurchaseOrderItemsRelationManager;
-use App\Models\OfferingLetter;
-use App\Models\PurchaseOrder;
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PurchaseOrderResource extends Resource
 {
@@ -111,7 +115,15 @@ class PurchaseOrderResource extends Resource
                 \Filament\Tables\Columns\TextColumn::make('date')
                     ->label('Purchase Order Date')
                     ->date(),
-                    \Filament\Tables\Columns\TextColumn::make('total_price')
+                \Filament\Tables\Columns\TextColumn::make('status')
+                    ->label('Purchase Order Date')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'pending' => 'gray',
+                        'process' => 'warning',
+                        'complete' => 'success',
+                    }),
+                \Filament\Tables\Columns\TextColumn::make('total_price')
                     ->label('Total Price')
                     ->money('IDR')
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -174,6 +186,81 @@ class PurchaseOrderResource extends Resource
                     })
             ])
             ->actions([
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\Action::make('updateStatusProcessed')
+                        ->hidden(fn (Model $record) => !is_null($record->process_datetime))
+                        ->label('Set Status to Process')
+                        ->icon('heroicon-o-cog-6-tooth')
+                        ->form([
+                            \Filament\Forms\Components\DatePicker::make('process_datetime')
+                                ->required()
+                                ->label('Process Date')
+                                ->native(false),
+                        ])
+                        ->action(function (array $data, PurchaseOrder $record): void {
+                            $record->status = 'process';
+                            $record->process_datetime = $data['process_datetime'];
+                            $record->save();
+                        })
+                        ->successNotification(
+                            Notification::make()
+                                ->success()
+                                ->title('Status Changed')
+                                ->body('PO Status was changed to Process')
+                        ),
+                    Tables\Actions\Action::make('updateStatusCompleted')
+                        ->hidden(fn (Model $record) => is_null($record->process_datetime))
+                        ->label('Set Status to Complete')
+                        ->icon('heroicon-o-check')
+                        ->form([
+                            \Filament\Forms\Components\DatePicker::make('complete_datetime')
+                                ->required()
+                                ->label('Process Date')
+                                ->native(false),
+                        ])
+                        ->action(function (array $data, PurchaseOrder $record): void {
+                            $record->status = 'complete';
+                            $record->complete_datetime = $data['complete_datetime'];
+                            $record->save();
+                        })
+                        ->successNotification(
+                            Notification::make()
+                                ->success()
+                                ->title('Status Changed')
+                                ->body('PO Status was changed to Complete')
+                        ),
+                ])
+                ->hidden(fn (Model $record) => $record->status == 'complete'),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\Action::make('Travel Document')
+                        ->hidden(fn (Model $record) => empty($record->travelDocument))
+                        ->label('View Travel Document')
+                        ->icon('heroicon-o-eye')
+                        ->url(
+                            fn (Model $record)
+                                => route('filament.admin.resources.travel-documents.view', $record->travelDocument)
+                        )
+                        ->openUrlInNewTab(),
+                    Tables\Actions\Action::make('Invoice')
+                        ->hidden(fn (Model $record) => empty($record->invoice))
+                        ->label('View Invoice')
+                        ->icon('heroicon-o-eye')
+                        ->url(
+                            fn (Model $record)
+                                => route('filament.admin.resources.invoices.view', $record->invoice)
+                        )
+                        ->openUrlInNewTab(),
+                    Tables\Actions\Action::make('Receipt')
+                        ->hidden(fn (Model $record) => empty($record->receipt))
+                        ->label('View Receipt')
+                        ->icon('heroicon-o-eye')
+                        ->url(
+                            fn (Model $record)
+                                => route('filament.admin.resources.receipts.view', $record->receipt)
+                        )
+                        ->openUrlInNewTab(),
+                ])
+                ->hidden(fn (Model $record) => $record->status != 'complete'),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
