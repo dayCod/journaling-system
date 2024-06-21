@@ -124,8 +124,18 @@ class ReceiptResource extends Resource
                     })
             ])
             ->actions([
+                Tables\Actions\Action::make('View PO Detail')
+                    ->label('View PO Detail')
+                    ->color('success')
+                    ->icon('heroicon-o-eye')
+                    ->url(
+                        fn (Receipt $receipt)
+                            => route('filament.admin.resources.purchase-orders.view', $receipt->purchaseOrder)
+                    )
+                    ->openUrlInNewTab(),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
