@@ -2,38 +2,36 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\ReceiptResource\Pages;
+use App\Filament\Resources\ReceiptResource\RelationManagers;
+use App\Models\Receipt;
 use Filament\Forms;
-use Filament\Tables;
 use Filament\Forms\Form;
-use Filament\Tables\Table;
-use App\Models\PurchaseOrder;
-use App\Models\TravelDocument;
 use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\TravelDocumentResource\Pages;
-use App\Filament\Resources\TravelDocumentResource\RelationManagers;
-use Illuminate\Database\Eloquent\Model;
 
-class TravelDocumentResource extends Resource
+class ReceiptResource extends Resource
 {
-    protected static ?string $model = TravelDocument::class;
+    protected static ?string $model = Receipt::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationLabel = 'Travel Documents';
+    protected static ?string $navigationLabel = 'Receipts';
 
-    protected static ?string $modelLabel = 'Travel Documents';
+    protected static ?string $modelLabel = 'Receipts';
 
     protected static ?string $navigationGroup = 'Document Data';
 
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 5;
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                \Filament\Forms\Components\Section::make()
+                \Filament\Forms\Components\Section::make('Receipt Information')
                     ->schema([
                         \Filament\Forms\Components\Select::make('purchase_order_id')
                             ->required()
@@ -45,15 +43,23 @@ class TravelDocumentResource extends Resource
                         \Filament\Forms\Components\TextInput::make('code')
                             ->required()
                             ->maxLength(100)
-                            ->placeholder('Travel Document Number')
-                            ->label('Travel document number')
-                            ->unique(ignoreRecord: true)
-                            ->columnSpan(2),
+                            ->placeholder('Receipt Number')
+                            ->label('Receipt number')
+                            ->unique(ignoreRecord: true),
                         \Filament\Forms\Components\TextInput::make('to_company_target')
                             ->required()
                             ->maxLength(100)
-                            ->placeholder('Client Company & Regency')
-                            ->label('Client company & regency'),
+                            ->placeholder('Client Company')
+                            ->label('Client company'),
+                        \Filament\Forms\Components\TextInput::make('company_target_address')
+                            ->required()
+                            ->placeholder('Client Company Address')
+                            ->label('Company company address')
+                            ->columnSpanFull(),
+                    ])
+                    ->columns(3),
+                \Filament\Forms\Components\Section::make('Receipt Detail Information')
+                    ->schema([
                         \Filament\Forms\Components\TextInput::make('bod_name')
                             ->required()
                             ->maxLength(100)
@@ -64,13 +70,16 @@ class TravelDocumentResource extends Resource
                             ->maxLength(100)
                             ->placeholder('Supplier BOD Position')
                             ->label('Supplier BOD position'),
-                        \Filament\Forms\Components\TextArea::make('note')
-                            ->placeholder('Note')
-                            ->label('Note')
-                            ->columnSpanFull()
-                            ->rows(5),
+                        \Filament\Forms\Components\TextInput::make('bank_name')
+                            ->required()
+                            ->placeholder('Supplier Bank Name')
+                            ->label('Supplier bank name'),
+                        \Filament\Forms\Components\TextInput::make('bank_account_number')
+                            ->required()
+                            ->placeholder('Supplier Bank Account Number')
+                            ->label('Supplier bank account number'),
                     ])
-                    ->columns(3),
+                    ->columns(2),
             ]);
     }
 
@@ -79,7 +88,7 @@ class TravelDocumentResource extends Resource
         return $table
             ->columns([
                 \Filament\Tables\Columns\TextColumn::make('code')
-                    ->label('Travel Document Number')
+                    ->label('Receipt Number')
                     ->searchable(),
                 \Filament\Tables\Columns\TextColumn::make('purchaseOrder.code')
                     ->label('Purchase Order Number')
@@ -115,18 +124,8 @@ class TravelDocumentResource extends Resource
                     })
             ])
             ->actions([
-                Tables\Actions\Action::make('View PO Detail')
-                    ->label('View PO Detail')
-                    ->color('success')
-                    ->icon('heroicon-o-eye')
-                    ->url(
-                        fn (TravelDocument $travelDocument)
-                            => route('filament.admin.resources.purchase-orders.view', $travelDocument->purchaseOrder)
-                    )
-                    ->openUrlInNewTab(),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -145,10 +144,10 @@ class TravelDocumentResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTravelDocuments::route('/'),
-            'create' => Pages\CreateTravelDocument::route('/create'),
-            'view' => Pages\ViewTravelDocument::route('/{record}'),
-            'edit' => Pages\EditTravelDocument::route('/{record}/edit'),
+            'index' => Pages\ListReceipts::route('/'),
+            'create' => Pages\CreateReceipt::route('/create'),
+            'view' => Pages\ViewReceipt::route('/{record}'),
+            'edit' => Pages\EditReceipt::route('/{record}/edit'),
         ];
     }
 }
