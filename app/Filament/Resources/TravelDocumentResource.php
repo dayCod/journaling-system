@@ -115,6 +115,12 @@ class TravelDocumentResource extends Resource
                     })
             ])
             ->actions([
+                Tables\Actions\Action::make('pdf')
+                    ->label('PDF')
+                    ->color('success')
+                    ->icon('heroicon-o-arrow-down-on-square-stack')
+                    ->url(fn (TravelDocument $travelDocument) => route('pdf.travelDocument', $travelDocument))
+                    ->openUrlInNewTab(),
                 Tables\Actions\Action::make('View PO Detail')
                     ->label('View PO Detail')
                     ->color('success')
