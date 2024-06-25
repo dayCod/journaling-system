@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InvoicePdfController;
 use App\Http\Controllers\OfferingLetterPdfController;
 use App\Http\Controllers\TravelDocumentPdfController;
 use Illuminate\Support\Facades\Route;
@@ -21,3 +22,4 @@ Route::get('/', function () {
 
 Route::get('pdf/offering-letter/{offeringLetter}', OfferingLetterPdfController::class)->name('pdf.offeringLetter');
 Route::get('pdf/travel-document/{travelDocument}', TravelDocumentPdfController::class)->name('pdf.travelDocument');
+Route::get('pdf/invoice/{invoice}', InvoicePdfController::class)->name('pdf.invoice');

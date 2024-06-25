@@ -108,6 +108,12 @@ class InvoiceResource extends Resource
                     })
             ])
             ->actions([
+                Tables\Actions\Action::make('pdf')
+                    ->label('PDF')
+                    ->color('success')
+                    ->icon('heroicon-o-arrow-down-on-square-stack')
+                    ->url(fn (Invoice $invoice) => route('pdf.invoice', $invoice))
+                    ->openUrlInNewTab(),
                 Tables\Actions\Action::make('View PO Detail')
                     ->label('View PO Detail')
                     ->color('success')
